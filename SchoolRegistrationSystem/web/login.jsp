@@ -1,13 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-  <head>
+ <head>
     <title>School Registration System Application</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
   </head>
   <body>
      <div class="d-flex flex-row bd-highlight justify-content-end p-5">
-       <label class="btn btn-outline-primary m-1" for="btncheck1"><a href="Login">Login</a></label>
-  	   <label class="btn btn-outline-info m-1" for="btncheck2"><a href="Registration">Register</a></label>
+  	   <label class="btn btn-outline-info m-1" for="btncheck2"><a href="userregistration.jsp">Register</a></label>
  	 </div>
  	 <div class="container">
  	 <div class="d-flex justify-content-center">
@@ -18,7 +15,21 @@
 		<span class="badge rounded-pill bg-danger">Registration</span>
 		<span class="badge rounded-pill bg-warning text-dark">System</span> 	
 	</h1> 
-	</div> 		
- 	 </div>
-  </body>
+	</div>
+	<div class="container">
+	<form action=login method="post">
+  		<div class="form-group">
+   		 	<label for="exampleInputEmail1">Email address</label>
+   		 	<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="username">
+  		</div>
+  		<div class="form-group">
+    		<label for="exampleInputPassword1">Password</label>
+    		<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+  		</div>
+  		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+
+ 	</div>
+  </div>
+</body>
 </html>
