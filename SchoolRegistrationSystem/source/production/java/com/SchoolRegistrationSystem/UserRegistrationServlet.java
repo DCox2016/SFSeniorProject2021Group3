@@ -1,7 +1,7 @@
 package com.SchoolRegistrationSystem;
 
 import java.io.IOException;
-import java.sql.Connection;
+import java.net.URLEncoder;
 import java.sql.*;
 
 import javax.servlet.ServletException;
@@ -21,6 +21,7 @@ public class UserRegistrationServlet extends HttpServlet {
   	String url = "jdbc:mysql://localhost:3306/schoolregistrationsystem";
   	String dbUsername = "root";
   	String dbPassword = "admin";
+  	boolean successRegistration = false;
   	
   	public void init() {
   		//load driver
@@ -31,10 +32,58 @@ public class UserRegistrationServlet extends HttpServlet {
   		}
   	}
   	
-	private void adduser(String email, String password, String firstName, String lastName, String age, String address1,
+  	private void getRegistrationID(String email, String password, String firstName, String lastName, String age, String address1,
 			String address2, String city, String state, String zip, String phone, String userType, String grade,
 			String dependents) {
-
+  		
+  		Integer registrationID = 0;
+  		
+  		try {
+		//Connection to db
+		Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+		//Make a statement
+		Statement st = con.createStatement();
+		String query = "select count(*) from registrationuser";
+		//ResultSet
+		ResultSet rs = st.executeQuery(query);
+		rs.next();
+		registrationID = rs.getInt("count(*)") + 1;
+	
+		rs.close();
+		st.close();
+		con.close();
+  		}
+  		
+  		catch (SQLException e) {
+  			System.out.println(e.toString());
+  		} catch (Exception e) {
+  			System.out.println(e.toString());
+  		}
+  		
+  		adduser(registrationID,
+  				email, 
+				password, 
+				firstName, 
+				lastName, 
+				age, 
+				address1, 
+				address2, 
+				city, 
+				state, 
+				zip, 
+				phone, 
+				userType, 
+				grade, 
+				dependents);
+	
+	}
+	
+  	
+	private void adduser(Integer id, String email, String password, String firstName, String lastName, String age, String address1,
+			String address2, String city, String state, String zip, String phone, String userType, String grade,
+			String dependents) {
+		
+			
 			try {
 	  			//Connection to db
 	  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
@@ -62,8 +111,7 @@ public class UserRegistrationServlet extends HttpServlet {
 	  		    } else {
 	  		    	Address2 = address2;
 	  		    }
-	  		    //Need to change if new registation
-	  		    Integer id = 3;
+	  
 	  		    		    
 	  			//Make a statement
 	  			Statement st = con.createStatement();
@@ -92,13 +140,16 @@ public class UserRegistrationServlet extends HttpServlet {
 	  			con.close();
 	  		}
 	  		catch (SQLException e) {
+	  			successRegistration = true;
 	  			System.out.println(e.toString());
 	  		} catch (Exception e) {
+	  			successRegistration = false;
 	  			System.out.println(e.toString());
 	  		}
 	  	
 		
 	}
+	
 
 	
 	/**
@@ -121,7 +172,7 @@ public class UserRegistrationServlet extends HttpServlet {
 		String grade = req.getParameter("grade");
 		String dependents = req.getParameter("dependents");
 		
-		adduser(email, 
+		getRegistrationID(email, 
 				password, 
 				firstName, 
 				lastName, 

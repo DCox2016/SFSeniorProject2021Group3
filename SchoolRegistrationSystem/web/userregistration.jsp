@@ -101,8 +101,9 @@
     </div>
     </div>
   
-  <button type="submit" class="btn btn-primary mt-1">Sign in</button>
+  <button type="submit" class="btn btn-primary mt-1">Sign up</button>
 </form>
+<p>Message: ${param.message}</p>
 </div>
 </body>
 </html>
