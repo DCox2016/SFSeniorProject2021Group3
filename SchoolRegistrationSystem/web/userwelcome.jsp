@@ -8,7 +8,7 @@
   </head>
 <body>
      <div class="d-flex flex-row bd-highlight justify-content-end p-5">
-       <label class="btn btn-outline-danger m-1 text-danger" for="btncheck1"><a href="index.jsp">Log Out</a></label>
+       <label class="btn btn-outline-danger m-1 text-danger" for="btncheck1"><a href="login.jsp">Log Out</a></label>
  	 </div>
  <div class="container">
  <div class="card">

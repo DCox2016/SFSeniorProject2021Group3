@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/Registration")
 public class UserRegistrationServlet extends HttpServlet {
+	String ErrorMessages;
 	private static final long serialVersionUID = 1L;
     
   //db connection information
@@ -32,7 +33,7 @@ public class UserRegistrationServlet extends HttpServlet {
   		}
   	}
   	
-  	private void getRegistrationID(String email, String password, String firstName, String lastName, String age, String address1,
+  	private boolean getRegistrationID(String email, String password, String firstName, String lastName, String age, String address1,
 			String address2, String city, String state, String zip, String phone, String userType, String grade,
 			String dependents) {
   		
@@ -60,59 +61,54 @@ public class UserRegistrationServlet extends HttpServlet {
   			System.out.println(e.toString());
   		}
   		
-  		adduser(registrationID,
+  	    	Integer Age = Integer.parseInt(age);
+		    String CityStateZip = city + " ," + state + " " + zip;
+		    String Dependents;
+		    String Address2;    
+		 
+		
+		    if(dependents == null) {
+		    	Dependents = null;
+		    } else {
+		    	Dependents = dependents;
+		    }
+		    
+		    if(address2 == null) {
+		    	Address2 = null;
+		    } else {
+		    	Address2 = address2;
+		    }
+  		
+  		if(adduser(registrationID,
   				email, 
 				password, 
 				firstName, 
 				lastName, 
-				age, 
+			    Age, 
 				address1, 
-				address2, 
-				city, 
-				state, 
-				zip, 
+				Address2, 
+				CityStateZip,
 				phone, 
 				userType, 
 				grade, 
-				dependents);
+				Dependents)) {
+  			return true;
+  		} else {
+  			return false;
+  		}
 	
 	}
 	
   	
-	private void adduser(Integer id, String email, String password, String firstName, String lastName, String age, String address1,
-			String address2, String city, String state, String zip, String phone, String userType, String grade,
+	private boolean adduser(Integer id, String email, String password, String firstName, String lastName, Integer age, String address1,
+			String address2, String CityStateZip, String phone, String userType, String grade,
 			String dependents) {
 		
 			
 			try {
 	  			//Connection to db
 	  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
-	  			
-	  		    Integer Age = Integer.parseInt(age);
-	  		    String CityStateZip = city + " " + zip;
-	  		    Integer Grade;
-	  		    String Dependents;
-	  		    String Address2;
-	  		    
-	  		    if(grade == null) {
-	  		    	Grade = null;
-	  		    } else {
-	  		    	Grade = Integer.parseInt(grade);
-	  		    }
-	  		    
-	  		    if(dependents == null) {
-	  		    	Dependents = null;
-	  		    } else {
-	  		    	Dependents = dependents;
-	  		    }
-	  		    
-	  		    if(address2 == null) {
-	  		    	Address2 = null;
-	  		    } else {
-	  		    	Address2 = address2;
-	  		    }
-	  
-	  		    		    
+	  				    		    
 	  			//Make a statement
 	  			Statement st = con.createStatement();
 	  			String query = 
@@ -123,31 +119,31 @@ public class UserRegistrationServlet extends HttpServlet {
 	  							    +password+"','"
 	  					            +firstName+"','"
 	  							    +lastName+"','"
-	  					            +Age+"','"
+	  					            +age+"','"
 	  							    +address1+"','"
-	  					            +Address2+"','"
+	  					            +address2+"','"
 	  							    +CityStateZip+"','"
 	  					            +phone+"','"
-	  							    +userType+"','"
-	  							    +Grade+"','"
-	  							    +Dependents+"'"+
+	  							    +userType+"','" 
+	  							    +grade+"','"
+	  							    +dependents+"'"+
 	  							");";
 	  			//ResultSet
 	  			int rs = st.executeUpdate(query);
 	  		
-	  			//query does not have a lot results
 	  			st.close();
 	  			con.close();
+	  			return true;
 	  		}
 	  		catch (SQLException e) {
-	  			successRegistration = true;
+	  			ErrorMessages = e.toString();
 	  			System.out.println(e.toString());
 	  		} catch (Exception e) {
-	  			successRegistration = false;
+	  			ErrorMessages = e.toString();
 	  			System.out.println(e.toString());
 	  		}
-	  	
-		
+			return false;
+	  
 	}
 	
 
@@ -156,7 +152,6 @@ public class UserRegistrationServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
 		String firstName = req.getParameter("firstName");
@@ -169,10 +164,11 @@ public class UserRegistrationServlet extends HttpServlet {
 		String zip = req.getParameter("zip");
 		String phone = req.getParameter("phone");
 		String userType = req.getParameter("userType");
-		String grade = req.getParameter("grade");
+	    String grade = req.getParameter("grade");
 		String dependents = req.getParameter("dependents");
 		
-		getRegistrationID(email, 
+		
+		if(getRegistrationID(email, 
 				password, 
 				firstName, 
 				lastName, 
@@ -185,7 +181,13 @@ public class UserRegistrationServlet extends HttpServlet {
 				phone, 
 				userType, 
 				grade, 
-				dependents);
+				dependents)) {
+		;
+		res.sendRedirect("thanks.jsp");
+		} else {
+			req.setAttribute("message",ErrorMessages);
+			req.getRequestDispatcher("userregistration.jsp").forward(req, res);
+		}
 
 	}
 
