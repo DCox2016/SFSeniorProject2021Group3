@@ -1,14 +1,22 @@
 package com.SchoolRegistrationSystem;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.sql.*;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 
 /**
  * Servlet implementation class UserRegistrationServlet
@@ -38,7 +46,7 @@ public class UserRegistrationServlet extends HttpServlet {
 			String dependents) {
   		
   		Integer registrationID = 0;
-  		
+  				
   		try {
 		//Connection to db
 		Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
@@ -166,10 +174,20 @@ public class UserRegistrationServlet extends HttpServlet {
 		String userType = req.getParameter("userType");
 	    String grade = req.getParameter("grade");
 		String dependents = req.getParameter("dependents");
+		String hashedPassword = null;
+		try {
+			hashedPassword = hashNormalPassword(password);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		if(getRegistrationID(email, 
-				password, 
+				hashedPassword, 
 				firstName, 
 				lastName, 
 				age, 
@@ -190,5 +208,38 @@ public class UserRegistrationServlet extends HttpServlet {
 		}
 
 	}
+
+	private String hashNormalPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		 int iterations = 1000;
+	     char[] chars = password.toCharArray();
+	     byte[] salt = getSalt();
+	         
+	     PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
+	     SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+	     byte[] hash = skf.generateSecret(spec).getEncoded();
+	     return iterations + ":" + toHex(salt) + ":" + toHex(hash);
+	}
+
+	private byte[] getSalt() throws NoSuchAlgorithmException {
+		 SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+	     byte[] salt = new byte[16];
+	     sr.nextBytes(salt);
+	     return salt;
+	}
+	
+	private String toHex(byte[] array) {
+
+        BigInteger bi = new BigInteger(1, array);
+        String hex = bi.toString(16);
+        int paddingLength = (array.length * 2) - hex.length();
+        if(paddingLength > 0)
+        {
+            return String.format("%0"  +paddingLength + "d", 0) + hex;
+        }else{
+            return hex;
+        }
+	}
+	
+	
 
 }
