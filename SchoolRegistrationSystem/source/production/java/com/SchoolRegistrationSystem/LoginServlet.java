@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+	String userRole = null;
 	/**
 	 * 
 	 */
@@ -38,7 +39,6 @@ public class LoginServlet extends HttpServlet {
 	}	
 	
 	public boolean login(String name, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-		String generatedSecuredPasswordHash = null;
 		String storedPassword = null;
 		try {
 			//Connection to db
@@ -51,9 +51,10 @@ public class LoginServlet extends HttpServlet {
 			ResultSet rs = st.executeQuery(query);
 			while(rs.next()) {
 				storedPassword = rs.getString("password");
+				userRole = rs.getString("Rolee");
 			}
 			boolean matched = validatePassword(password, storedPassword);
-			System.out.print(matched);
+	
 			if(matched == true) {
 				rs.close();
 				st.close();
@@ -86,7 +87,19 @@ public class LoginServlet extends HttpServlet {
 			//Check email and password exist in query
 			try {
 				if (login(email, password)) {
-						res.sendRedirect("userwelcome.jsp?user="+email);
+				
+					if(userRole.equals("Staff")) {
+						res.sendRedirect("staffDashboard.jsp");
+					} 
+					if(userRole.equals("Teacher")) {
+						res.sendRedirect("teacherDashboard.jsp");
+					}
+					if(userRole.equals("Parent")) {
+						res.sendRedirect("patientDashboard.jsp");
+					}
+					if(userRole.equals("Student")) {
+						res.sendRedirect("studentDashboard.jsp");
+					}
 				} else {
 					//else back to login
 					res.sendRedirect("login.jsp");
@@ -103,39 +116,6 @@ public class LoginServlet extends HttpServlet {
 		
 	}
 	
-	  private static String generateStorngPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException
-	    {
-		  
-	        int iterations = 1000;
-	        char[] chars = password.toCharArray();
-	        byte[] salt = getSalt();
-	         
-	        PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
-	        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-	        byte[] hash = skf.generateSecret(spec).getEncoded();
-	        return iterations + ":" + toHex(salt) + ":" + toHex(hash);
-	    }
-	  
-		private static byte[] getSalt() throws NoSuchAlgorithmException {
-			 SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-		     byte[] salt = new byte[16];
-		     sr.nextBytes(salt);
-		     return salt;
-		}
-		
-		private static String toHex(byte[] array) {
-
-	        BigInteger bi = new BigInteger(1, array);
-	        String hex = bi.toString(16);
-	        int paddingLength = (array.length * 2) - hex.length();
-	        if(paddingLength > 0)
-	        {
-	            return String.format("%0"  +paddingLength + "d", 0) + hex;
-	        }else{
-	            return hex;
-	        }
-		}
-		
 		 private static boolean validatePassword(String originalPassword, String storedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException
 		    {
 				

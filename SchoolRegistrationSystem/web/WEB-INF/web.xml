@@ -16,4 +16,12 @@
 		<servlet-name>userRegistrationServlet</servlet-name>
 		<url-pattern>/registration</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>staffServlet</servlet-name>
+		<servlet-class>com.SchoolRegistrationSystem.staffServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>staffServlet</servlet-name>
+		<url-pattern>/staffServlet</url-pattern>
+	</servlet-mapping>
 </web-app>
