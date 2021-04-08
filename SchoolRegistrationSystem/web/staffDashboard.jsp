@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
  <head>
   <title>School Registration System Application</title>
@@ -65,9 +66,6 @@
 					<li class ="nav-item">
 					<a class ="nav-link" onclick="myFunction4()"> View Student Personal Information </a>
 					</li>
-					<li class ="nav-item">
-					<a class ="nav-link" href="StaffServlet?param=UserWaiting">User Waiting Approval </a>
-	               </li>
 				</ul>
 			</nav>
 		</div>
@@ -75,6 +73,24 @@
 		<div class="col-9">
 			<div class="container">
            	<p id="content"></p>
+           	<jsp:useBean id="users" class="com.SchoolRegistrationSystem.StaffServlet"/>  
+           	<%
+           	ResultSet rset;
+           	rset = users.getWaitingUsers();
+           	
+            while (rset.next ())
+            {
+            	out.print("<table>" +
+            	"<thead>" +
+            	"<tbody>"+
+                "<tr>" +
+                "<th> First name: "+ rset.getString("FirstName")+".  " + "</th>"+
+                "<th> Last name: "+ rset.getString("LastName")+".  " + "</th>"+
+                "<th> User Type: "+ rset.getString("UserType")+".  " + "</th>"+
+                "<tr>"+
+                "</table>");
+            }
+           	%>
 			</div>
 		</div>
 	</div>

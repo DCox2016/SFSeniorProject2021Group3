@@ -51,45 +51,37 @@ public class StaffServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-	    String request = req.getParameter("getParm");
-	
-	        	try {
-	        		
-	      			//Connection to db
-	      			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
-	      				    		    
-	      			//Make a statement
-	      			Statement st = con.createStatement();
-	      			String query = "Select * from registrationuser";
-	      		//ResultSet
-	      			ResultSet rs = st.executeQuery(query);
-	      			
-		      			
-	      			if(rs.next()) {
-	      				
-	      			}
-	    
-	      
-	      			rs.close();
-	      			st.close();
-	      			con.close();
-	      	  		}
-	      	  		
-	      	  		catch (SQLException e) {
-	      	  			System.out.println(e.toString());
-	      	  		} catch (Exception e) {
-	      	  			System.out.println(e.toString());
-	      	  		}
-	  
-	    //res.sendRedirect("staffDashboard.jsp?waiting="+awaiting);
-	}
 
+	}
+	
+	public ResultSet getWaitingUsers() throws SQLException {
+		ResultSet rs = null;
+	try {
+    		
+  			//Connection to db
+  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+  				    		    
+  			//Make a statement
+  			Statement st = con.createStatement();
+  			String query = "Select * from registrationuser";
+  		//ResultSet
+  			 rs = st.executeQuery(query);
+  			
+    	}	
+  	  		catch (SQLException e) {
+  	  			System.out.println(e.toString());
+  	  		} catch (Exception e) {
+  	  			System.out.println(e.toString());
+  	  		}
+	
+	   return rs;
+	}
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(req, res);
+	
 	}
 
 }
