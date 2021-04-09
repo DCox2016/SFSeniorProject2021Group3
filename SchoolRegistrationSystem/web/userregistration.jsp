@@ -119,7 +119,7 @@
   	 If you are a parent
   	</p>
   	<div class="form-group col-md-10">
-       <label for="dependents">Child's name</label>
+       <label for="dependents">StudentId</label>
       <input type="text" class="form-control mb-2" id="dependents" name="dependents">
     </div>
    </div>

@@ -20,6 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 	String userRole = null;
+	String userFirstName = null;
+	String userLastName = null;
+	String studentId = null;
 	/**
 	 * 
 	 */
@@ -52,6 +55,9 @@ public class LoginServlet extends HttpServlet {
 			while(rs.next()) {
 				storedPassword = rs.getString("password");
 				userRole = rs.getString("Rolee");
+				userFirstName = rs.getString("FirstName");
+				userLastName = rs.getString("LastName");
+			    studentId = rs.getString("studentId");
 			}
 			boolean matched = validatePassword(password, storedPassword);
 	
@@ -92,10 +98,10 @@ public class LoginServlet extends HttpServlet {
 						res.sendRedirect("staffDashboard.jsp");
 					} 
 					if(userRole.equals("Teacher")) {
-						res.sendRedirect("teacherDashboard.jsp");
+						res.sendRedirect("teacherdashboard.jsp");
 					}
 					if(userRole.equals("Parent")) {
-						res.sendRedirect("patientDashboard.jsp");
+						res.sendRedirect("parentdashboard.jsp?firstName="+userFirstName+"&lastName="+userLastName+"&studentId="+studentId);
 					}
 					if(userRole.equals("Student")) {
 						res.sendRedirect("studentDashboard.jsp");
