@@ -92,6 +92,17 @@
             }
            	%>
 			</div>
+			
+			<jsp:useBean id="classiess" class="com.SchoolRegistrationSystem.StaffServlet"/>  
+           	<%
+           	ResultSet userClassies;
+           	userClassies = classiess.getClassies();
+           	
+            while (userClassies.next ())
+            {
+            	out.print(userClassies.getString("ClassName") + "</br>");
+            }
+           	%>
 		</div>
 	</div>
 </body>

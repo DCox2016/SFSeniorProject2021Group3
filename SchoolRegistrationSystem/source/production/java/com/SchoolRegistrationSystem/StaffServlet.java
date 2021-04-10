@@ -77,6 +77,29 @@ public class StaffServlet extends HttpServlet {
 	   return rs;
 	}
 	
+	
+	public ResultSet getClassies() throws SQLException {
+		ResultSet rs = null;
+	try {
+    		
+  			//Connection to db
+  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+  				    		    
+  			//Make a statement
+  			Statement st = con.createStatement();
+  			String query = "Select * from classregistration";
+  		//ResultSet
+  			 rs = st.executeQuery(query);
+  			
+    	}	
+  	  		catch (SQLException e) {
+  	  			System.out.println(e.toString());
+  	  		} catch (Exception e) {
+  	  			System.out.println(e.toString());
+  	  		}
+	
+	   return rs;
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

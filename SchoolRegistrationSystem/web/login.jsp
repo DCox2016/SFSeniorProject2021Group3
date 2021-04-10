@@ -30,8 +30,10 @@
     		<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
     		<button type="submit" class="btn btn-primary mt-3">Sign in</button>
   		</div>
-  		
 	</form>
+  		<div class="form-group col-md-10 mx-auto" style="width: 60%;">
+   		 	<p><a href="RestPassword.jsp" class="text-white">Forgot Password</a></p>
+  		</div>
 	</div>
  	</div>
   </div>
