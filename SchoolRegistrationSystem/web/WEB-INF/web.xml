@@ -31,4 +31,21 @@
 		<servlet-name>resetPasswordServlet</servlet-name>
 		<url-pattern>/resetPassword</url-pattern>
 	</servlet-mapping>
+		
+		<servlet>
+		<servlet-name>gradeupdate</servlet-name>
+		<servlet-class>com.SchoolRegistrationSystem.gradeupdate</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>gradeupdate</servlet-name>
+		<url-pattern>/gradeupdate</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>attendanceupdate</servlet-name>
+		<servlet-class>com.SchoolRegistrationSystem.attendanceupdate</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>attendanceupdate</servlet-name>
+		<url-pattern>/attendanceupdate</url-pattern>
+	</servlet-mapping>
 </web-app>

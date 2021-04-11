@@ -54,6 +54,30 @@ public class StaffServlet extends HttpServlet {
 
 	}
 	
+	//New!!!!!!!!!!!!!!!!!!!!!!!!!
+	public ResultSet getRegCount() throws SQLException {
+		ResultSet rs = null;
+	try {
+    		
+  			//Connection to db
+  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+  				    		    
+  			//Make a statement
+  			Statement st = con.createStatement();
+  		//ResultSet
+  			 rs = st.executeQuery("select FirstName from registrationuser");
+  			
+    	}	
+  	  		catch (SQLException e) {
+  	  			System.out.println(e.toString());
+  	  		} catch (Exception e) {
+  	  			System.out.println(e.toString());
+  	  		}
+	
+	   return rs;
+	}
+	
+	//Class list gets queried and sent to staffDashboard.jsp
 	public ResultSet getWaitingUsers() throws SQLException {
 		ResultSet rs = null;
 	try {
@@ -63,7 +87,7 @@ public class StaffServlet extends HttpServlet {
   				    		    
   			//Make a statement
   			Statement st = con.createStatement();
-  			String query = "Select * from registrationuser";
+  			String query = "select concat(FirstName,' ',LastName) AS User, UserType from registrationuser";
   		//ResultSet
   			 rs = st.executeQuery(query);
   			
@@ -78,7 +102,8 @@ public class StaffServlet extends HttpServlet {
 	}
 	
 	
-	public ResultSet getClassies() throws SQLException {
+	//Class list gets queried and sent to staffDashboard.jsp
+	public ResultSet getUserApprovalList() throws SQLException {
 		ResultSet rs = null;
 	try {
     		
@@ -100,6 +125,71 @@ public class StaffServlet extends HttpServlet {
 	
 	   return rs;
 	}
+	//Class list gets queried and sent to staffDashboard.jsp
+	public ResultSet getclassList() throws SQLException {
+		ResultSet rs = null;
+	try {
+    		
+  			//Connection to db
+  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+  				    		    
+  			//Make a statement
+  			Statement st = con.createStatement();
+  			String query = "Select * from classregistration";
+  		//ResultSet
+  			 rs = st.executeQuery(query);
+  			
+    	}	
+  	  		catch (SQLException e) {
+  	  			System.out.println(e.toString());
+  	  		} catch (Exception e) {
+  	  			System.out.println(e.toString());
+  	  		}
+	
+	   return rs;
+	}
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	//Student data gets queried and sent to staffDashboard.jsp
+	public ResultSet getStudentData() throws SQLException {
+		ResultSet rs = null;
+	try {
+  			//Connection to db
+  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+  			//Make a statement
+  			Statement st = con.createStatement();
+  			String query = "Select * from studentdata";
+  		//ResultSet
+  			 rs = st.executeQuery(query);
+    	}	
+  	  		catch (SQLException e) {
+  	  			System.out.println(e.toString());
+  	  		} catch (Exception e) {
+  	  			System.out.println(e.toString());
+  	  		}
+	   return rs;
+	}
+	//Student class data gets queried and sent to staffDashboard.jsp
+	public ResultSet getStudentStoredData() throws SQLException {
+		ResultSet rs = null;
+	try {
+  			//Connection to db
+  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+  			//Make a statement
+  			Statement st = con.createStatement();
+  			String query = "select concat(FirstName,' ',LastName) AS Student, StudentId from studentdata;";
+  		//ResultSet
+  			 rs = st.executeQuery(query);
+    	}	
+  	  		catch (SQLException e) {
+  	  			System.out.println(e.toString());
+  	  		} catch (Exception e) {
+  	  			System.out.println(e.toString());
+  	  		}
+	   return rs;
+	}
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

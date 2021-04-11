@@ -18,7 +18,7 @@
  	<div class="container-fluid">
 		<div class="d-flex justify-content-center">
 			<h1>
-				<span class="badge rounded-pill bg-primary">Patent</span>
+				<span class="badge rounded-pill bg-primary">Parent</span>
 				<span class="badge rounded-pill bg-danger">Dashboard</span> 
 			 </h1>
 		 </div>
@@ -29,6 +29,7 @@
    	     <%
   			String firstName = request.getParameter("firstName");
   			String lastName = request.getParameter("lastName");
+  			String studentId = request.getParameter("studentId");
   			out.println("Welcome back " + firstName + " " + lastName);
  		%>
   		</div>
@@ -52,26 +53,33 @@
  		 <div class="card-header bg-primary">
    		<jsp:useBean id="students" class="com.SchoolRegistrationSystem.parentServlet"/>  
            	<%
-           	ResultSet rset;
-           	rset = students.getStudent();
+           	String Grade = "";
+           	String StudentId = "";
+           	String Present = "";
+           	String Absent = "";
            	
-           	
-            while (rset.next ())
+           	try {
+           	ResultSet rs;
+           	rs = students.getStudent(firstName, lastName);
+            while (rs.next())
             {
-            	out.print(" " + rset.getString("FirstName"));
-            	out.print(" " + rset.getString("LastName"));
-            } 
-          
-            
-           	%>
-   		  </br>
-   		 <%
-  			String id = request.getParameter("studentId");
-  			out.println("Student Id: " + id);
- 		%>
+            	out.print(" " + rs.getString("FirstName"));
+            	out.print(" " + rs.getString("LastName"));
+            	StudentId = rs.getString("StudentId");
+            	Grade = rs.getString("Grade");
+            	Present = rs.getString("Present");
+            	Absent = rs.getString("Absent");
+            	
+            };
+  	  		} catch (Exception e) {
+  	  			System.out.println(e.toString());
+  	  		}
+           	%> 
  		 </div>
   			<div class="card-body">
-    		<h5 class="card-title">6th Grade</h5> 
+    		<h5 class="card-title"> <%
+            	out.print(Grade);
+           	%>th Grade</h5> 
   			</div>
   			
   			<div class="card">
@@ -80,13 +88,25 @@
     		<div class="container">
  			 <div class="row">
    				 <div class="col">
-   				   Math: 
+   				 <jsp:useBean id="grades" class="com.SchoolRegistrationSystem.parentServlet"> 
+   				 <% 
+   				 try {
+   				ResultSet rs = students.getGrades(studentId);
+   	            while (rs.next())
+   	            {
+   	            	out.print(" " + rs.getString("ClassName"));
+   	            	out.print(" " + rs.getString("Grades"));
+   	            	
+   	            };
+   	  	  		} catch (Exception e) {
+   	  	  			System.out.println(e.toString());
+   	  	  		}
+   				%>
+   				</jsp:useBean>
    				 </div>
    			 <div class="col">
-   			   	   Reading:
    			 </div>
    			 <div class="col">
-    			  PE:
    			 </div>
   			</div>
 			</div>
@@ -125,10 +145,10 @@
     		<div class="container">
  			 <div class="row">
    				 <div class="col">
-   				   Days out
+   				   Days out: <%out.print(Present);%>
    				 </div>
    			 <div class="col">
-   			   	   Days in
+   			   	   Days in: <%out.print(Absent);%>
    			 </div>
    			 <div class="col">
    		

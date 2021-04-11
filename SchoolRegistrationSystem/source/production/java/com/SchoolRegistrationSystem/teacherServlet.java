@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class parentServlet
  */
-@WebServlet("/parentServlet")
-public class parentServlet extends HttpServlet {
+@WebServlet("/teacherServlet")
+public class teacherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
   	String url = "jdbc:mysql://localhost:3306/schoolregistrationsystem";
@@ -37,7 +37,7 @@ public class parentServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public parentServlet() {
+    public teacherServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -49,7 +49,28 @@ public class parentServlet extends HttpServlet {
 		
 	}
 	
-	public ResultSet getStudent(String firstName, String lastName) throws SQLException {
+	public ResultSet getStudents() throws SQLException {
+		ResultSet rs = null;
+	try {
+    		
+  			//Connection to db
+  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+  			//Make a statement
+  			Statement st = con.createStatement();
+  			String query = "Select StudentId, FirstName, LastName, Present, Absent from studentdata;";
+  		//ResultSet
+  			 rs = st.executeQuery(query);
+  			
+    	}	
+  	  		catch (SQLException e) {
+  	  			System.out.println(e.toString());
+  	  		} catch (Exception e) {
+  	  			System.out.println(e.toString());
+  	  		}
+	   return rs;
+	}
+	
+	public ResultSet getClasses() throws SQLException {
 		ResultSet rs = null;
 	try {
     		
@@ -58,10 +79,9 @@ public class parentServlet extends HttpServlet {
   				    		    
   			//Make a statement
   			Statement st = con.createStatement();
-  			String query = "Select studentdata.FirstName, studentdata.LastName, studentdata.StudentId, studentdata.Present, studentdata.Absent, registrationuser.Grade from studentdata left join registrationuser on studentdata.StudentId = registrationuser.studentId where registrationuser.FirstName = '"+firstName+"';";
+  			String query = "Select ClassName from classregistration;";
   		//ResultSet
   			 rs = st.executeQuery(query);
-  	         System.out.print(rs);
   			
     	}	
   	  		catch (SQLException e) {
@@ -73,30 +93,27 @@ public class parentServlet extends HttpServlet {
 	   return rs;
 	}
 	
-	public ResultSet getGrades(String studentId) throws SQLException {
+	
+	public ResultSet getGrades() throws SQLException {
 		ResultSet rs = null;
 	try {
-    		
   			//Connection to db
   			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
   				    		    
   			//Make a statement
   			Statement st = con.createStatement();
-  			String query = "select gradeevent.Grades, classregistration.ClassName from gradeevent inner join gradejoinstudent on gradeevent.EventId = gradejoinstudent.EventId inner join classregistration on gradejoinstudent.ClassId = classregistration.ClassId where gradejoinstudent.StudentId = '"+studentId+"';";
+  			String query = "select gradeevent.EventId, gradeevent.Homework, gradeevent.Test, gradeevent.Grades, gradejoinstudent.StudentId, classregistration.ClassName, classregistration.ClassId from gradeevent inner join gradejoinstudent on gradeevent.EventId = gradejoinstudent.EventId inner join classregistration on gradejoinstudent.ClassId = classregistration.ClassId;";
   		//ResultSet
-//  			inner join classregistration on gradejoinstudent.ClassId = classregistration.ClassId;
   			 rs = st.executeQuery(query);
-  			
     	}	
   	  		catch (SQLException e) {
   	  			System.out.println(e.toString());
   	  		} catch (Exception e) {
   	  			System.out.println(e.toString());
   	  		}
-	
 	   return rs;
 	}
-
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
