@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.ResultSet" %>
+
 <!DOCTYPE html>
  <head>
   <title>School Registration System Application</title>
@@ -51,7 +52,7 @@
   	 <div class="col-8 mt-5 mb-5">
   	<div class="card">
  		 <div class="card-header bg-primary">
-   		<jsp:useBean id="students" class="com.SchoolRegistrationSystem.parentServlet"/>  
+   		<jsp:useBean id="students" class="com.SchoolRegistrationSystem.ParentServlet"/>  
            	<%
            	String Grade = "";
            	String StudentId = "";
@@ -88,7 +89,7 @@
     		<div class="container">
  			 <div class="row">
    				 <div class="col">
-   				 <jsp:useBean id="grades" class="com.SchoolRegistrationSystem.parentServlet"> 
+   				 <jsp:useBean id="grades" class="com.SchoolRegistrationSystem.ParentServlet"> 
    				 <% 
    				 try {
    				ResultSet rs = students.getGrades(studentId);

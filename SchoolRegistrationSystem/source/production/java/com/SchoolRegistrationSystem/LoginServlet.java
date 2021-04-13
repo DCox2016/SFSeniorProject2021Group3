@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @WebServlet("/login")
@@ -93,17 +94,24 @@ public class LoginServlet extends HttpServlet {
 			//Check email and password exist in query
 			try {
 				if (login(email, password)) {
+					//Start a session on successful log in
+					HttpSession session = req.getSession();
+								
 				
 					if(userRole.equals("Staff")) {
+						session.setAttribute("LogedInType", "staff");
 						res.sendRedirect("staffDashboard.jsp");
 					} 
 					if(userRole.equals("Teacher")) {
+						session.setAttribute("LogedInType", "teacher");
 						res.sendRedirect("teacherdashboard.jsp");
 					}
 					if(userRole.equals("Parent")) {
+						session.setAttribute("LogedInType", "parent");
 						res.sendRedirect("parentdashboard.jsp?firstName="+userFirstName+"&lastName="+userLastName+"&studentId="+studentId);
 					}
 					if(userRole.equals("Student")) {
+						session.setAttribute("LogedInType", "student");
 						res.sendRedirect("studentDashboard.jsp");
 					}
 				} else {

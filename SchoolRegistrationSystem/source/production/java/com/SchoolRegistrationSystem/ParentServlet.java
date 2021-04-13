@@ -12,12 +12,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class parentServlet
  */
-@WebServlet("/parentServlet")
-public class parentServlet extends HttpServlet {
+@WebServlet("/ParentServlet")
+public class ParentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
   	String url = "jdbc:mysql://localhost:3306/schoolregistrationsystem";
@@ -37,7 +38,7 @@ public class parentServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public parentServlet() {
+    public ParentServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -45,8 +46,17 @@ public class parentServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	public ResultSet getUserType(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		String loggedInUserType = (String) session.getAttribute("LogedInType");
+		System.out.print(loggedInUserType);
+		if(loggedInUserType == "parent") {
+		res.sendRedirect("parentdashboard.jsp");
+		} else {
+			session.invalidate();
+			res.sendRedirect("AccessDenied.jsp");
+		}
+		return null;
 	}
 	
 	public ResultSet getStudent(String firstName, String lastName) throws SQLException {
@@ -60,9 +70,7 @@ public class parentServlet extends HttpServlet {
   			Statement st = con.createStatement();
   			String query = "Select studentdata.FirstName, studentdata.LastName, studentdata.StudentId, studentdata.Present, studentdata.Absent, registrationuser.Grade from studentdata left join registrationuser on studentdata.StudentId = registrationuser.studentId where registrationuser.FirstName = '"+firstName+"';";
   		//ResultSet
-  			 rs = st.executeQuery(query);
-  	         System.out.print(rs);
-  			
+  			 rs = st.executeQuery(query);  			
     	}	
   	  		catch (SQLException e) {
   	  			System.out.println(e.toString());
