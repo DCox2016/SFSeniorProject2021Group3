@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+	<% String usertype = (String)request.getSession().getAttribute("LogedInType");
+	   if(usertype != "staff"){
+		   session.invalidate();
+		   response.sendRedirect("AccessDenied.jsp");
+	   }
+	%>
 <%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
  <head>
@@ -123,8 +129,8 @@
 	   			<%-- Get from StaffServlet List of courses --%>  			
 	           	<jsp:useBean id="users" class="com.SchoolRegistrationSystem.StaffServlet"/>  
 	           	<%
-	           	
-	           	
+	           
+	     	   if(usertype == "staff"){
 	           	ResultSet rset;
 	           	rset = users.getclassList();
 	           	out.print("<div id='myDIV'style='display:none;'><h2>List of Courses</h2><table>"+"<thead>" +
@@ -142,12 +148,14 @@
 	                "</tr>");
 	            }
 	            out.print(
-	                    "</table></div>"); %>
+	                    "</table></div>");
+	            }%>
 	           	</div>    
 	           	      	
 	           	<%-- Get from StaffServlet Student Class Schedule--%>
 	           	<jsp:useBean id="studentScheduleID" class="com.SchoolRegistrationSystem.StaffServlet"/>  
 	           	<%
+	     	   if(usertype == "staff"){
 	           	ResultSet StoredStudentClassData;
 	           	StoredStudentClassData = studentScheduleID.getStudentStoredData();
 	           	out.print("<div id='myDIV2'style='display:none;'><h2>Student Class Schedules</h2>"+
@@ -167,11 +175,13 @@
 	                "</tr>");
 	            }
 	            out.print(
-	                    "</table></div>"); %>
+	                    "</table></div>"); 
+	                    }%>
                     
                     <%-- Get from StaffServlet Student Grade--%>
            	<jsp:useBean id="studentGradeID" class="com.SchoolRegistrationSystem.StaffServlet"/>  
            	<%
+     	   if(usertype == "staff"){
            	ResultSet StoredStudentGradeData;
            	StoredStudentGradeData = studentGradeID.getStudentStoredData();
            	out.print("<div id='myDIV3'style='display:none;'><h2>Student Grades</h2>"+
@@ -191,11 +201,12 @@
                 "</tr>");
             }
             out.print(
-                    "</table></div>"); %>
+                    "</table></div>");} %>
                     
                     <%-- Get from StaffServlet Student Personal Information --%>
             <jsp:useBean id="classiess" class="com.SchoolRegistrationSystem.StaffServlet"/>  
            	<%
+     	   if(usertype == "staff"){
            	ResultSet StoredStudentData;
            	StoredStudentData = classiess.getStudentData();
            	out.print("<div id='myDIV4'style='display:none;'><h2>Student Personal Information</h2><table>"+"<thead>" +
@@ -225,7 +236,7 @@
                 "</tr>");
             }
             out.print(
-                    "</table></div>"); %>                    
+                    "</table></div>");} %>                    
 			</div>
 		</div>
 	</div>

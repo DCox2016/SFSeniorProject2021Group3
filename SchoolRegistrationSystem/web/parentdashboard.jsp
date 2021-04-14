@@ -1,7 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.sql.ResultSet" %>
-
+<%@ page import="java.sql.ResultSet" %>  
+	<% String usertype = (String)request.getSession().getAttribute("LogedInType");
+	   if(usertype != "parent"){
+		   session.invalidate();
+		   response.sendRedirect("AccessDenied.jsp");
+	   }
+	%>
 <!DOCTYPE html>
  <head>
   <title>School Registration System Application</title>
@@ -35,8 +40,6 @@
  		%>
   		</div>
 	</div>
-
-	
 	<div class="row">
 	
 	 <div class="col-4">

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%session.invalidate();%>
 <!DOCTYPE html>
 <html>
  <head>
@@ -15,9 +16,9 @@
  <div class="container">
  <div class="card">
   <div class="card-body">
-	<h5>Current user type does not have access to that dashboard.</h5>
-	<h5>If this is an issue, please go back to the Home Page and try </br>
-	    log in again. You will be automatically redirect to the page </br>
+	<h5>Current user type does not have access to that dashboard.</h5><br>
+	<h5>If this is an issue, please go back to the Home Page and try
+	    log in again. You will be automatically redirect to the page
 	    that you user type has access to.</h5>
   </div>
 </div></div>

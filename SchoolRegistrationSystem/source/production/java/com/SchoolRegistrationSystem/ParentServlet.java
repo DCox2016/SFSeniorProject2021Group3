@@ -46,21 +46,11 @@ public class ParentServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	public ResultSet getUserType(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		String loggedInUserType = (String) session.getAttribute("LogedInType");
-		System.out.print(loggedInUserType);
-		if(loggedInUserType == "parent") {
-		res.sendRedirect("parentdashboard.jsp");
-		} else {
-			session.invalidate();
-			res.sendRedirect("AccessDenied.jsp");
-		}
-		return null;
-	}
-	
+
+		
 	public ResultSet getStudent(String firstName, String lastName) throws SQLException {
 		ResultSet rs = null;
+		
 	try {
     		
   			//Connection to db
@@ -110,6 +100,7 @@ public class ParentServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+			
 		doGet(request, response);
 	}
 

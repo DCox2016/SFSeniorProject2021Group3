@@ -1,3 +1,9 @@
+<% String usertype = (String)request.getSession().getAttribute("LogedInType");
+	   if(usertype != "teacher"){
+		   session.invalidate();
+		   response.sendRedirect("AccessDenied.jsp");
+	   }
+%>
 <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
