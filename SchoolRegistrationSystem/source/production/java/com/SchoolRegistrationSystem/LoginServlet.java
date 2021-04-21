@@ -104,7 +104,7 @@ public class LoginServlet extends HttpServlet {
 					} 
 					if(userRole.equals("Teacher")) {
 						session.setAttribute("LogedInType", "teacher");
-						res.sendRedirect("teacherdashboard.jsp");
+						res.sendRedirect("teacherdashboard.jsp?firstName="+userFirstName+"&lastName="+userLastName+"&studentId="+studentId);
 					}
 					if(userRole.equals("Parent")) {
 						session.setAttribute("LogedInType", "parent");
@@ -112,7 +112,7 @@ public class LoginServlet extends HttpServlet {
 					}
 					if(userRole.equals("Student")) {
 						session.setAttribute("LogedInType", "student");
-						res.sendRedirect("studentDashboard.jsp");
+						res.sendRedirect("studentDashboard.jsp?firstName="+userFirstName+"&lastName="+userLastName+"&studentId="+studentId);
 					}
 				} else {
 					//else back to login

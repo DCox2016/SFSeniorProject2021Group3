@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-	<% String usertype = (String)request.getSession().getAttribute("LogedInType");
+<% String usertype = (String)request.getSession().getAttribute("LogedInType");
 	   if(usertype != "staff"){
 		   session.invalidate();
 		   response.sendRedirect("AccessDenied.jsp");
 	   }
 	%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
  <head>
@@ -62,6 +62,9 @@
 		    b.style.display = "block",x.style.display = "none",z.style.display = "none",a.style.display = "none";
 		  } 	  
 		}
+	function usersDetected() {
+		
+		}
 	</script> 
 	<%-- -------------Menu Style -------------- --%>
 	<style>li {cursor: pointer;}a:hover { background-color: #90ee90; transition: 0.1s;}</style>
@@ -97,6 +100,41 @@
 			 </h1> 
 		 </div>
    </div>
+   
+    <%-- Welcome with LoginServlet 
+   	<div class="card">
+		<div class="card-body">
+		   	<%
+		  		String firstName = request.getParameter("firstName");
+		  		String lastName = request.getParameter("lastName");
+		  		String studentId = request.getParameter("studentId");
+		  			
+		  		/** out.println("Welcome " + firstName + " " + lastName+", your student ID is "+studentId); **/
+		 	%>
+		</div>
+	</div>--%>
+	
+	
+	<%-- Indicate if Users Awaiting Approval --%>
+	
+	
+	
+	<%-- Get from StaffServlet Users Awaiting Approval --%> 
+	           	<jsp:useBean id="awaitingUsersID" class="com.SchoolRegistrationSystem.StaffServlet"/>  
+	           	<%
+	           	int storedApprovalCount = awaitingUsersID.awaitingPromo();
+	            if (storedApprovalCount > 0) { 
+	            	out.print("<div onclick=location.href='userApproval.jsp'; id='imp' style='width: 100%; cursor: pointer; text-align: center; padding: 15px 0px 15px 0px;'>There are users waiting to be approved.</div>");
+	            }
+	            else { 
+	        	  out.print("");	        	  
+	         	} 	            	
+	             %>
+	           
+	         
+	<div id='usersDetected'style='display:none;'>
+		<div  onclick='location.href='userApproval.jsp';' id='imp' style=''width: 100%; cursor: pointer; text-align: center;  padding: 15px 0px 15px 0px;'>One or more users awaiting to be approved</div>
+   	</div>
   <%-------------------- Menu------------------- --%>
    
 	<div class="row">
@@ -123,14 +161,13 @@
 		<%-- Content with text change via Javascript--%>
 		<div class="col-8">
 			<div class="container">
-			<div  onclick="location.href='userApproval.jsp';" id="imp" style="width: 100%; cursor: pointer; text-align: center;  padding: 15px 0px 15px 0px;">One or more users awaiting to be approved</div>
 	           	<div id="content">
 	           	
 	   			<%-- Get from StaffServlet List of courses --%>  			
 	           	<jsp:useBean id="users" class="com.SchoolRegistrationSystem.StaffServlet"/>  
 	           	<%
-	           
-	     	   if(usertype == "staff"){
+	           	
+	           	
 	           	ResultSet rset;
 	           	rset = users.getclassList();
 	           	out.print("<div id='myDIV'style='display:none;'><h2>List of Courses</h2><table>"+"<thead>" +
@@ -148,65 +185,52 @@
 	                "</tr>");
 	            }
 	            out.print(
-	                    "</table></div>");
-	            }%>
+	                    "</table></div>"); %>
 	           	</div>    
 	           	      	
-	           	<%-- Get from StaffServlet Student Class Schedule--%>
-	           	<jsp:useBean id="studentScheduleID" class="com.SchoolRegistrationSystem.StaffServlet"/>  
-	           	<%
-	     	   if(usertype == "staff"){
-	           	ResultSet StoredStudentClassData;
-	           	StoredStudentClassData = studentScheduleID.getStudentStoredData();
-	           	out.print("<div id='myDIV2'style='display:none;'><h2>Student Class Schedules</h2>"+
-	           			"<p>Select a student to view their schedule</p>"+
-	           			"<table>"+"<thead>" +
-	                	"<tbody>"+
-	                    "<tr>" +
-	                    "<th> Student</th>"+
-	                    "<th> Student ID</th>"+
-	                    "</tr>");
-	            while (StoredStudentClassData.next ())
-	            {
-	            	out.print(
-	            	"<tr>"+
-	            	"<td>"+ StoredStudentClassData.getString("Student")+"</td>"+
-	                "<td>"+ StoredStudentClassData.getString("StudentId")+"</td>"+               
-	                "</tr>");
-	            }
-	            out.print(
-	                    "</table></div>"); 
-	                    }%>
                     
-                    <%-- Get from StaffServlet Student Grade--%>
-           	<jsp:useBean id="studentGradeID" class="com.SchoolRegistrationSystem.StaffServlet"/>  
-           	<%
-     	   if(usertype == "staff"){
-           	ResultSet StoredStudentGradeData;
-           	StoredStudentGradeData = studentGradeID.getStudentStoredData();
-           	out.print("<div id='myDIV3'style='display:none;'><h2>Student Grades</h2>"+
-           			"<p>Select a student to view their grades</p>"+
-           			"<table>"+"<thead>" +
-                	"<tbody>"+
-                    "<tr>" +
-                    "<th> Student</th>"+
-                    "<th> Student ID</th>"+
-                    "</tr>");
-            while (StoredStudentGradeData.next ())
-            {
-            	out.print(
-            	"<tr>"+
-            	"<td>"+ StoredStudentGradeData.getString("Student")+"</td>"+
-            	"<td>"+ StoredStudentGradeData.getString("StudentId")+"</td>"+ 
-                "</tr>");
-            }
-            out.print(
-                    "</table></div>");} %>
+                    <%-- Get from StudentServlet Student Grade--%>
+		   <jsp:useBean id="uniqueGradeID" scope="request" class="com.SchoolRegistrationSystem.StaffServlet"/>  
+			   		<%
+		      		ResultSet UniqueGradeData;
+			   		UniqueGradeData = uniqueGradeID.uniqueGradeDat();
+		           	
+		        	out.print("<div id='myDIV3'style='display:none;'><h2>All Student Grades</h2><table>"+"<thead>" +
+		                	"<tbody>"+
+		                    "<tr>" +
+		                    "<th> Student ID </th>"+
+		                    "<th> Class Name </th>"+
+		                    "<th> Grade </th>"+
+		                    "<th> Event ID</th>"+
+		                    "<th> is Homework?</th>"+
+		                    "<th> is Test?</th>"+
+		                    "</tr>");
+		           	while (UniqueGradeData.next())
+		            {
+		           		String studId = UniqueGradeData.getString("StudentId");
+		           		String className = UniqueGradeData.getString("ClassName");
+		                String grade = UniqueGradeData.getString("Grades");
+		                String eventId = UniqueGradeData.getString("EventId");
+		                String isHomework = UniqueGradeData.getString("Homework");
+		                String isTest = UniqueGradeData.getString("Test");
+		    
+		           	out.print(
+		           			"<tr>"+
+		           			"<td>"+ studId + "</td>"+  
+		               		"<td>"+ className + "</td>"+        
+		               		"<td>"+ grade + "</td>"+ 
+		               		"<td>"+ eventId + "</td>"+ 
+		               		"<td>"+ isHomework + "</td>"+ 
+		               		"<td>"+ isTest + "</td>"+
+		               		"</tr>");
+		            }
+		           out.print(
+		               		"</table></div>"); 		            
+		           %>              
                     
                     <%-- Get from StaffServlet Student Personal Information --%>
             <jsp:useBean id="classiess" class="com.SchoolRegistrationSystem.StaffServlet"/>  
            	<%
-     	   if(usertype == "staff"){
            	ResultSet StoredStudentData;
            	StoredStudentData = classiess.getStudentData();
            	out.print("<div id='myDIV4'style='display:none;'><h2>Student Personal Information</h2><table>"+"<thead>" +
@@ -236,7 +260,34 @@
                 "</tr>");
             }
             out.print(
-                    "</table></div>");} %>                    
+                    "</table></div>"); %> 
+                 
+                <%-- Get from StudentServlet Student Grade--%>
+		   <jsp:useBean id="scheduleID" scope="request" class="com.SchoolRegistrationSystem.StaffServlet"/>  
+			   		<%
+		      		ResultSet StudentSchedule;
+			   		StudentSchedule = scheduleID.studentSchedules();
+		           	
+		        	out.print("<div id='myDIV2'style='display:none;'><h2>All Student Schedules</h2><table>"+"<thead>" +
+		                	"<tbody>"+
+		                    "<tr>" +
+		                    "<th> Student ID </th>"+
+		                    "<th> Class Name </th>"+
+		                    "</tr>");
+		           	while (StudentSchedule.next())
+		            {
+		           		String studId = StudentSchedule.getString("StudentId");
+		           		String className = StudentSchedule.getString("ClassName");
+		           	out.print(
+		           			"<tr>"+
+		           			"<td>"+ studId + "</td>"+  
+		               		"<td>"+ className + "</td>"+
+		               		"</tr>");
+		            }
+		           out.print(
+		               		"</table></div>"); 		            
+		           %>               
+                                                                                       
 			</div>
 		</div>
 	</div>

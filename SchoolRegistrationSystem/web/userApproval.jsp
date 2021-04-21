@@ -58,6 +58,7 @@
                     "<tr>" +
                     "<th> Full Name</th>"+               
                     "<th> User Type</th>"+
+                    "<th>  </th>"+
                     "</tr>");
             while (rset.next ())
             {
@@ -65,6 +66,7 @@
             	"<tr>"+
                 "<td>"+ rset.getString("User")+"</td>"+               
                 "<td>"+ rset.getString("UserType")+"</td>"+
+                "<td><button type='button' class='btn btn-primary'>Approve<button type='button' class='btn btn-danger'>Deny</td>"+
                 "</tr>");
             }
             out.print(

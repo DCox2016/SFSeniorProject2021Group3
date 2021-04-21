@@ -102,29 +102,7 @@ public class StaffServlet extends HttpServlet {
 	}
 	
 	
-	//Class list gets queried and sent to staffDashboard.jsp
-	public ResultSet getUserApprovalList() throws SQLException {
-		ResultSet rs = null;
-	try {
-    		
-  			//Connection to db
-  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
-  				    		    
-  			//Make a statement
-  			Statement st = con.createStatement();
-  			String query = "Select * from classregistration";
-  		//ResultSet
-  			 rs = st.executeQuery(query);
-  			
-    	}	
-  	  		catch (SQLException e) {
-  	  			System.out.println(e.toString());
-  	  		} catch (Exception e) {
-  	  			System.out.println(e.toString());
-  	  		}
-	
-	   return rs;
-	}
+
 	//Class list gets queried and sent to staffDashboard.jsp
 	public ResultSet getclassList() throws SQLException {
 		ResultSet rs = null;
@@ -170,18 +148,58 @@ public class StaffServlet extends HttpServlet {
   	  		}
 	   return rs;
 	}
-	//Student class data gets queried and sent to staffDashboard.jsp
-	public ResultSet getStudentStoredData() throws SQLException {
-		ResultSet rs = null;
-	try {
-  			//Connection to db
+
+
+	 
+	//Determine if there are any registrationuser not promoted in staffDashboard.jsp
+	public int awaitingPromo() throws SQLException 
+	{
+		 ResultSet rs = null;
+		 int waitCount = 0;
+	 
+		 try {
+			//Connection to db
   			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
   			//Make a statement
   			Statement st = con.createStatement();
-  			String query = "select concat(FirstName,' ',LastName) AS Student, StudentId from studentdata;";
+  			String query = "Select count(*) from registrationuser where Promoted IS NULL ";
+  		
   		//ResultSet
   			 rs = st.executeQuery(query);
-    	}	
+		 
+
+		 rs.next();
+		 waitCount = rs.getInt("count(*)");
+		 rs.close();
+		 st.close();
+		 con.close();
+		 return waitCount;
+		
+		 }
+			
+		 catch (SQLException e) {
+ 	  			System.out.println(e.toString());
+ 	  		} catch (Exception e) {
+ 	  			System.out.println(e.toString());
+ 	  		}
+		 return waitCount;
+	}
+	
+	//Query to get and display student grades
+	public ResultSet uniqueGradeDat() throws SQLException {
+		ResultSet rs = null;
+	try {
+    		
+  			//Connection to db
+  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+  				    		    
+  			//Make a statement
+  			Statement st = con.createStatement();
+  			String query = "select distinct studentdata.StudentId,classregistration.ClassName,gradeevent.Grades,gradeevent.EventId,gradeevent.Homework,gradeevent.Test from studentdata, classregistration, gradeevent order by FirstName, ClassName;";
+  		//ResultSet
+  			 rs = st.executeQuery(query); 
+  			 System.out.print(rs);
+    	}	  
   	  		catch (SQLException e) {
   	  			System.out.println(e.toString());
   	  		} catch (Exception e) {
@@ -189,6 +207,32 @@ public class StaffServlet extends HttpServlet {
   	  		}
 	   return rs;
 	}
+	
+	//Query to get and display student schedules
+	public ResultSet studentSchedules() throws SQLException {
+		ResultSet rs = null;
+	try {
+    		
+  			//Connection to db
+  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+  				    		    
+  			//Make a statement
+  			Statement st = con.createStatement();
+  			String query = "select distinct studentdata.StudentId,classregistration.ClassName,gradeevent.Grades,gradeevent.EventId,gradeevent.Homework,gradeevent.Test from studentdata, classregistration, gradeevent order by FirstName, ClassName;";
+  		//ResultSet
+  			 rs = st.executeQuery(query); 
+  			 System.out.print(rs);
+    	}	  
+  	  		catch (SQLException e) {
+  	  			System.out.println(e.toString());
+  	  		} catch (Exception e) {
+  	  			System.out.println(e.toString());
+  	  		}
+	   return rs;
+	}
+	
+		
+	
 	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
