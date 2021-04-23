@@ -1,3 +1,4 @@
+<!--Christopher Evers  -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.ResultSet" %>  
@@ -15,46 +16,38 @@
   <script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
  </head>
- <body class="bg-success">
-    <div class="d-flex flex-row bd-highlight justify-content-end p-5">
-     <a href="login.jsp">
-  	 <label class="btn btn-outline-light m-1 text-light" for="btncheck1">Log Out</label>	
-  	   </a>
- 	 </div>
+ <body>
+ <div class="row">
  	<div class="container-fluid">
-		<div class="d-flex justify-content-center">
+		<div class="d-flex justify-content-center col">
 			<h1>
 				<span class="badge rounded-pill bg-primary">Parent</span>
 				<span class="badge rounded-pill bg-danger">Dashboard</span> 
 			 </h1>
 		 </div>
+		 <div class="text-right col">
+		 <label class="btn btn-outline-danger m-1 text-danger" for="btncheck1"><a href="login.jsp">Log Out</a></label>
+		 </div>
    </div>
-   <div class="container">
-      <div class="card">
-  		<div class="card-body">
+   </div>
+   <div class="container-fluid">
+   
+   
+   <div class="container col-8 card">
+  		<div class="card-body text-center">
    	     <%
   			String firstName = request.getParameter("firstName");
   			String lastName = request.getParameter("lastName");
   			String studentId = request.getParameter("studentId");
-  			out.println("Welcome back " + firstName + " " + lastName);
+  			out.println("<h1>Welcome back " + firstName + " " + lastName + "</h1>");
  		%>
   		</div>
 	</div>
-	<div class="row">
-	
-	 <div class="col-4">
-	<div class="card mt-5" style="width: 18rem;">
-  		<img class="card-img-top" src="https://i.pinimg.com/originals/2c/54/ff/2c54ff31b9d05983462266e982b142a6.jpg" alt="Card image cap">
-  		<div class="card-body">
-   		 <h5 class="card-title">School News. Go Mighty Dragons !</h5>
-   		 <p class="card-text">The Might Dragons have a home game tonight!</p>
-  		</div>
-  	</div>
-  	</div>
-  	
-  	 <div class="col-8 mt-5 mb-5">
+	</div>
+	<div class="row justify-content-center">
+  	 <div class="col-10 mt-5 mb-5">
   	<div class="card">
- 		 <div class="card-header bg-primary">
+ 		 <div class="card-header bg-primary bg-lighten-md">
    		<jsp:useBean id="students" class="com.SchoolRegistrationSystem.ParentServlet"/>  
            	<%
            	String Grade = "";
@@ -67,8 +60,8 @@
            	rs = students.getStudent(firstName, lastName);
             while (rs.next())
             {
-            	out.print(" " + rs.getString("FirstName"));
-            	out.print(" " + rs.getString("LastName"));
+            	out.print("<h3>Student: " + rs.getString("FirstName"));
+            	out.print(" " + rs.getString("LastName") + "</h3>");
             	StudentId = rs.getString("StudentId");
             	Grade = rs.getString("Grade");
             	Present = rs.getString("Present");
@@ -88,18 +81,19 @@
   			
   			<div class="card">
   				<div class="card-body">
-  				<h5 class="card-title">Current Grade</h5>
+  				<h5 class="card-title">Current Grades</h5>
     		<div class="container">
  			 <div class="row">
-   				 <div class="col">
+   				 <div class="col row">
    				 <jsp:useBean id="grades" class="com.SchoolRegistrationSystem.ParentServlet"> 
    				 <% 
    				 try {
    				ResultSet rs = students.getGrades(studentId);
    	            while (rs.next())
    	            {
-   	            	out.print(" " + rs.getString("ClassName"));
-   	            	out.print(" " + rs.getString("Grades"));
+   	            	out.print("<div class=\"col-4\"> " + rs.getString("ClassName"));
+   	            	out.print(": " + rs.getString("EventName"));
+   	            	out.print(" - " + rs.getString("Grades") + "%</div>");
    	            	
    	            };
    	  	  		} catch (Exception e) {
@@ -108,41 +102,11 @@
    				%>
    				</jsp:useBean>
    				 </div>
-   			 <div class="col">
-   			 </div>
-   			 <div class="col">
-   			 </div>
   			</div>
 			</div>
-  				</div>
+  			</div>
 			</div>
 			
-			<div class="card">
-  				<div class="card-body">
-    				<h5 class="card-title">Current Schedule</h5>
-    				<table class="table">
-				  <tbody>
-				    <tr>
-				      <th scope="row">First Period</th>
-				      <td>Reading</td>
-				    </tr>
-				    <tr>
-				      <th scope="row">Second Period</th>
-				      <td>Math</td>
-				    </tr>
-				      <tr>
-				      <th scope="row">Lunch</th>
-				      <td>1 hour lunch</td>
-				    </tr>
-				    <tr>
-				      <th scope="row">Third Period</th>
-				      <td>PR</td>
-				    </tr>
-				  </tbody>
-				</table>
-  				</div>
-			</div>
-  			
   			<div class="card">
   				<div class="card-body">
   				<h5 class="card-title">Attendance</h5>
@@ -157,17 +121,13 @@
    			 <div class="col">
    		
    			 </div>
+   			 </div>
+  			</div>
   			</div>
 			</div>
-  				</div>
-			</div>
+			
 		</div>
-	
-		
 		</div>
 	</div>
-   </div>
-<body>
-
 </body>
 </html>

@@ -1,12 +1,14 @@
 package com.SchoolRegistrationSystem;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -54,6 +56,13 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 		Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
 		Statement st=con.createStatement();
 	st.executeUpdate("update studentdata set Present = '"+Present+"', Absent = '"+Absent+"'where StudentId = " +StudentId+ ";");
+	response.setContentType("text/html");
+	PrintWriter pw=response.getWriter();
+	pw.println("<script type=\"text/javascript\">");
+	pw.println("alert('Attendance has been updated for StudentID: "+StudentId+"');");
+	pw.println("</script>");
+	RequestDispatcher rd=request.getRequestDispatcher("teacherdashboard.jsp");
+	rd.include(request, response);
 	}
 	catch(Exception e)
 	{
