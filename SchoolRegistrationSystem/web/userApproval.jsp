@@ -1,12 +1,12 @@
-<% String usertype = (String)request.getSession().getAttribute("LogedInType");
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="java.sql.ResultSet" %>
+	<% String usertype = (String)request.getSession().getAttribute("LogedInType");
 	   if(usertype != "staff"){
 		   session.invalidate();
 		   response.sendRedirect("AccessDenied.jsp");
 	   }
 	%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
  <head>
   <title>School Registration System Application</title>
@@ -74,6 +74,7 @@
                 		 "<th>Approval</th>"+
                 	"</tr>"+
            		"</table>");
+           	if(rset != null){
             while (rset.next ())
             { 
             	int regID =rset.getInt("RegistrationId");
@@ -110,6 +111,7 @@
               	    "<button type='Submit' name='deny' class='btn btn-danger'>Deny</button></td>"+
                 "</tr></table></form>");
             }
+           	}
            	%>
 			</div>
 		</div>

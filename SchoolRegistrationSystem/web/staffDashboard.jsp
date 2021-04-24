@@ -1,12 +1,12 @@
-<% String usertype = (String)request.getSession().getAttribute("LogedInType");
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="java.sql.ResultSet" %>
+	<% String usertype = (String)request.getSession().getAttribute("LogedInType");
 	   if(usertype != "staff"){
 		   session.invalidate();
 		   response.sendRedirect("AccessDenied.jsp");
 	   }
 	%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
  <head>
   <title>School Registration System Application</title>
@@ -158,7 +158,8 @@
 	   			<%-- Get from StaffServlet List of courses --%>  			
 	           	<jsp:useBean id="users" class="com.SchoolRegistrationSystem.StaffServlet"/>  
 	           	<%
-	           	
+	         
+	               	
 	           	
 	           	ResultSet rset;
 	           	rset = users.getclassList();
@@ -168,6 +169,7 @@
 	                    "<th> Course Number</th>"+          
 	                    "<th> Course Name</th>"+
 	                    "</tr>");
+	           	if(rset != null){
 	            while (rset.next ())
 	            {
 	            	out.print(
@@ -177,7 +179,8 @@
 	                "</tr>");
 	            }
 	            out.print(
-	                    "</table></div>"); %>
+	                    "</table></div>");
+	            }%>
 	           	</div>    
 	           	      	
                     
@@ -197,6 +200,7 @@
 		                    "<th> is Homework?</th>"+
 		                    "<th> is Test?</th>"+
 		                    "</tr>");
+		        	if(UniqueGradeData != null){
 		           	while (UniqueGradeData.next())
 		            {
 		           		String studId = UniqueGradeData.getString("StudentId");
@@ -217,7 +221,8 @@
 		               		"</tr>");
 		            }
 		           out.print(
-		               		"</table></div>"); 		            
+		               		"</table></div>"); 
+		        	}
 		           %>              
                     
  <%-- Get from Staff Servlet Student Personal Information and send back --%>
@@ -227,7 +232,7 @@
 	   	
            	allStudentData = StudentInfoId.uniqueStudentDat();
            	out.print("<div id='myDIV4'style='display:none;'><br><h2>All Students Personal Info</h2><br>");
-           	
+           	if(allStudentData != null){
            	while (allStudentData.next())
             {
             String studId = allStudentData.getString("StudentId");
@@ -282,6 +287,7 @@
            		"</form><hr>");
             }
            	out.print("</div>");
+           	}
            %> 
                  
                 <%-- Get from StudentServlet Student Schedules--%>
@@ -296,6 +302,7 @@
 		                    "<th> Student ID </th>"+
 		                    "<th> Class Name </th>"+
 		                    "</tr>");
+		        	if(StudentSchedule != null){
 		           	while (StudentSchedule.next())
 		            {
 		           		String studId = StudentSchedule.getString("StudentId");
@@ -307,7 +314,8 @@
 		               		"</tr>");
 		            }
 		           out.print(
-		               		"</table></div>"); 		            
+		               		"</table></div>"); 	
+		        	}
 		           %>               
                                                                                        
 			</div>
