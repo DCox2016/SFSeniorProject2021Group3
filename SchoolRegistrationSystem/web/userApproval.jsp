@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.sql.ResultSet" %>
+	<% String usertype = (String)request.getSession().getAttribute("LogedInType");
+	   if(usertype != "staff"){
+		   session.invalidate();
+		   response.sendRedirect("AccessDenied.jsp");
+	   }
+	%>
 <!DOCTYPE html>
  <head>
   <title>School Registration System Application</title>
@@ -8,8 +14,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
   <script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-	<style>li {cursor: pointer;}a:hover { background-color: #90ee90; transition: 0.1s;}</style>
- 	 <style>
+  <style>li {cursor: pointer;}a:hover { background-color: #90ee90; transition: 0.1s;}</style>
+  <style>
 	table {
 	  border-collapse: collapse;
 	  width: 100%;
@@ -24,9 +30,13 @@
 	tr:nth-child(even) {
 	  background-color: #dddddd;
 	}
-	</style>
+	a:hover {
+  text-decoration: none;
+}
+   </style>
  </head>
  <body>
+ 
  <%-- Header --%>
  	<div class="container">
 		<div class="d-flex justify-content-center">
@@ -49,43 +59,62 @@
 		<div class="col-9">
 			<div class="container">
            	<p id="content"></p>
-           	<jsp:useBean id="users" class="com.SchoolRegistrationSystem.StaffServlet"/>  
+           	<jsp:useBean id="users" scope="request" class="com.SchoolRegistrationSystem.userApprovalServlet"/>  
            	<%
            	ResultSet rset;
            	rset = users.getWaitingUsers();
-           	out.print("<br><h2>Users Awaiting Approval</h2><table>"+"<thead>" +
-                	"<tbody>"+
-                    "<tr>" +
-                    "<th> Full Name</th>"+               
-                    "<th> User Type</th>"+
-                    "<th>  </th>"+
-                    "</tr>");
+        	
+           	out.print("<br><h2>Users Awaiting Approval</h2>");
+           	out.print( 
+           			
+           		"<table>"+"<thead>" +"<tbody>"+
+                	"<tr>"+
+               	   		 "<th>Full Name</th>"+               
+                		 "<th>User Type</th>"+
+                		 "<th>Approval</th>"+
+                	"</tr>"+
+           		"</table>");
+           	if(rset != null){
             while (rset.next ())
-            {
+            { 
+            	int regID =rset.getInt("RegistrationId");
             	out.print(
+            	"<form id='frm2' action=userApprovalServlet method='post'>"+
+           			
+            			
+                "<table>"+"<thead>" +
+                "<tbody>"+
+                "<tr>" + 
+                "<th style='display: none;'><label for='EMAIL'></label></th>"+
+                "<th style='display: none;'><label for='pWord'></label></th>"+
+                "<th style='display: none;'><label for='firstN'></label></th>"+
+                "<th style='display: none;'><label for='lastN'></label></th>"+
+                "<th style='display: none;'><label for='phoneN'></label></th>"+
+                "<th style='display: none;'><label for='studID'></label></th>"+
+                "<th style='display: none;'><label for='regId'></label></th>"+
+                "<th style='display: none;'><label for='fname'>Full Name</label></th>"+               
+                "<th style='display: none;'><label for='type'>User Type</label></th>"+
+                "<th style='display: none;'>Approval</th>"+
+                "</tr>"+
             	"<tr>"+
-                "<td>"+ rset.getString("User")+"</td>"+               
-                "<td>"+ rset.getString("UserType")+"</td>"+
-                "<td><button type='button' class='btn btn-primary'>Approve<button type='button' class='btn btn-danger'>Deny</td>"+
-                "</tr>");
+            	"<td style='display: none;'><input type='hidden' id='regId' name='regId' value='"+regID+"' readonly></td>"+
+                "<td><input type='text' id='fname' name='fname' value='"+rset.getString("User")+"' readonly></td>"+
+                "<td><input type='text' id='type' name='type' value='"+rset.getString("UserType")+"' readonly></td>"+
+                "<td style='display: none;'><input type='hidden' id='EMAIL' name='EMAIL' value='"+rset.getString("Email")+"' readonly></td>"+
+                "<td style='display: none;'><input type='hidden' id='pWord' name='pWord' value='"+rset.getString("Password")+"' readonly></td>"+
+                "<td style='display: none;'><input type='hidden' id='firstN' name='firstN' value='"+rset.getString("FirstName")+"' readonly></td>"+
+                "<td style='dsisplay: none;'><input type='hidden' id='lastN' name='lastN' value='"+rset.getString("LastName")+"' readonly></td>"+
+                "<td style='display: none;'><input type='hidden' id='phoneN' name='phoneN' value='"+rset.getString("Phone")+"' readonly></td>"+
+         	    "<td style='display: none;'><input type='hidden' id='studID' name='studID' value='"+rset.getInt("StudentId")+"' readonly></td>"+                
+               
+                "<td><button type='submit' name='add' class='btn btn-primary'>Approve</button>"+
+              	    "<button type='Submit' name='deny' class='btn btn-danger'>Deny</button></td>"+
+                "</tr></table></form>");
             }
-            out.print(
-                    "</table>");
-           	
-            while (rset.next ())
-            {
-            	out.print("<table>" +
-            	"<thead>" +
-            	"<tbody>"+
-                "<tr>" +
-                "<th> First name: "+ rset.getString("User")+".  " + "</th>"+
-                "<th> User Type: "+ rset.getString("UserType")+".  " + "</th>"+
-                "<tr>"+
-                "</table>");
-            }
+           	}
            	%>
 			</div>
 		</div>
-	</div>	
+	</div>			
 </body>
 </html>

@@ -1,12 +1,12 @@
-<% String usertype = (String)request.getSession().getAttribute("LogedInType");
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="java.sql.ResultSet" %>
+	<% String usertype = (String)request.getSession().getAttribute("LogedInType");
 	   if(usertype != "staff"){
 		   session.invalidate();
 		   response.sendRedirect("AccessDenied.jsp");
 	   }
 	%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
  <head>
   <title>School Registration System Application</title>
@@ -101,21 +101,13 @@
 		 </div>
    </div>
    
-    <%-- Welcome with LoginServlet 
-   	<div class="card">
-		<div class="card-body">
+  <%-- get sqldb information from login Servlet.--%>
+
 		   	<%
 		  		String firstName = request.getParameter("firstName");
 		  		String lastName = request.getParameter("lastName");
 		  		String studentId = request.getParameter("studentId");
-		  			
-		  		/** out.println("Welcome " + firstName + " " + lastName+", your student ID is "+studentId); **/
 		 	%>
-		</div>
-	</div>--%>
-	
-	
-	<%-- Indicate if Users Awaiting Approval --%>
 	
 	
 	
@@ -139,7 +131,7 @@
    
 	<div class="row">
 	
-		<div class="col-4">
+		<div class="col-3">
 			<nav class ="navbar bg-light">
 				<ul class ="nav navbar-nav" >
 					<li>Main Dashboard</li>
@@ -159,23 +151,25 @@
 			</nav>
 		</div>	
 		<%-- Content with text change via Javascript--%>
-		<div class="col-8">
+		<div class="col-9">
 			<div class="container">
 	           	<div id="content">
 	           	
 	   			<%-- Get from StaffServlet List of courses --%>  			
 	           	<jsp:useBean id="users" class="com.SchoolRegistrationSystem.StaffServlet"/>  
 	           	<%
-	           	
+	         
+	               	
 	           	
 	           	ResultSet rset;
 	           	rset = users.getclassList();
-	           	out.print("<div id='myDIV'style='display:none;'><h2>List of Courses</h2><table>"+"<thead>" +
+	           	out.print("<div id='myDIV'style='display:none;'><br><h2>List of Courses</h2><br><table>"+"<thead>" +
 	                	"<tbody>"+
 	                    "<tr>" +
 	                    "<th> Course Number</th>"+          
 	                    "<th> Course Name</th>"+
 	                    "</tr>");
+	           	if(rset != null){
 	            while (rset.next ())
 	            {
 	            	out.print(
@@ -185,7 +179,8 @@
 	                "</tr>");
 	            }
 	            out.print(
-	                    "</table></div>"); %>
+	                    "</table></div>");
+	            }%>
 	           	</div>    
 	           	      	
                     
@@ -195,7 +190,7 @@
 		      		ResultSet UniqueGradeData;
 			   		UniqueGradeData = uniqueGradeID.uniqueGradeDat();
 		           	
-		        	out.print("<div id='myDIV3'style='display:none;'><h2>All Student Grades</h2><table>"+"<thead>" +
+		        	out.print("<div id='myDIV3'style='display:none;'><br><h2>All Grades</h2><br><table>"+"<thead>" +
 		                	"<tbody>"+
 		                    "<tr>" +
 		                    "<th> Student ID </th>"+
@@ -205,6 +200,7 @@
 		                    "<th> is Homework?</th>"+
 		                    "<th> is Test?</th>"+
 		                    "</tr>");
+		        	if(UniqueGradeData != null){
 		           	while (UniqueGradeData.next())
 		            {
 		           		String studId = UniqueGradeData.getString("StudentId");
@@ -225,55 +221,88 @@
 		               		"</tr>");
 		            }
 		           out.print(
-		               		"</table></div>"); 		            
+		               		"</table></div>"); 
+		        	}
 		           %>              
                     
-                    <%-- Get from StaffServlet Student Personal Information --%>
-            <jsp:useBean id="classiess" class="com.SchoolRegistrationSystem.StaffServlet"/>  
-           	<%
-           	ResultSet StoredStudentData;
-           	StoredStudentData = classiess.getStudentData();
-           	out.print("<div id='myDIV4'style='display:none;'><h2>Student Personal Information</h2><table>"+"<thead>" +
-                	"<tbody>"+
-                    "<tr>" +
-                    "<th> Student ID</th>"+               
-                    "<th> Name</th>"+
-                    "<th> Last Name</th>"+
-                    "<th> Birthday</th>"+
-                    "<th> Address</th>"+
-                    "<th> City</th>"+
-                    "<th> Zip</th>"+
-                    "<th> PhoneNumber</th>"+
-                    "</tr>");
-            while (StoredStudentData.next ())
+ <%-- Get from Staff Servlet Student Personal Information and send back --%>
+   			<jsp:useBean id="StudentInfoId" scope="request" class="com.SchoolRegistrationSystem.StaffServlet"/>  
+	   		<%
+      		ResultSet allStudentData;
+	   	
+           	allStudentData = StudentInfoId.uniqueStudentDat();
+           	out.print("<div id='myDIV4'style='display:none;'><br><h2>All Students Personal Info</h2><br>");
+           	if(allStudentData != null){
+           	while (allStudentData.next())
             {
-            	out.print(
-            	"<tr>"+
-                "<td>"+ StoredStudentData.getString("StudentId")+"</td>"+               
-                "<td>"+ StoredStudentData.getString("FirstName")+"</td>"+
-                "<td>"+ StoredStudentData.getString("LastName")+"</td>"+               
-                "<td>"+ StoredStudentData.getString("Birthday")+"</td>"+
-                "<td>"+ StoredStudentData.getString("Address")+"</td>"+               
-                "<td>"+ StoredStudentData.getString("City")+"</td>"+
-                "<td>"+ StoredStudentData.getString("Zip")+"</td>"+               
-                "<td>"+ StoredStudentData.getString("PhoneNumber")+"</td>"+
-                "</tr>");
+            String studId = allStudentData.getString("StudentId");
+           	String nameFirst = allStudentData.getString("FirstName");
+           	String nameLast= allStudentData.getString("LastName");
+           	String bday= allStudentData.getString("Birthday");
+           	String home= allStudentData.getString("Address");
+           	String city= allStudentData.getString("City");
+           	int zip= allStudentData.getInt("Zip");
+           	int phoneNum= allStudentData.getInt("PhoneNumber");
+           	String Absence= allStudentData.getString("Absent");            
+           	out.print("<form id='frm2' action=StaffServlet method='post'>"+
+           		  "<div>"+
+           		  "<div class='form-row'>"+
+           				"<div class='form-group col-md-2'>"+
+           				  "<label for='inputEmail4'>Student ID</label>"+
+           				  "<input type='text' class='form-control' id='StudentID' name='StudentID' value='"+studId+"' readonly>"+
+           				"</div>"+
+           				"<div class='form-group col-md-2'>"+
+           				  "<label for='inputPassword4'>First Name</label>"+
+           				  "<input type='text' class='form-control' id='FirstName' name='FirstName' value='"+nameFirst+"' readonly>"+
+           				"</div>"+
+           				"<div class='form-group col-md-2'>"+
+           					"<label for='inputAddress'>Last Name</label>"+
+           					"<input type='text' class='form-control' id='LastName' name='LastName' value='"+nameLast+"' readonly>"+
+           				"</div>"+
+	           		    "<div class='form-group col-md-2'>"+
+	           		   	    "<label for='inputBday'>Birth Date</label>"+
+	           		        "<input type='date' class='form-control' id='bDate' name='bDate' value='"+bday+"' readonly>"+
+	           		    "</div>"+
+	           	  "</div>"+
+	           		  "<div class='form-row'>"+
+	           				"<div class='form-group col-md-3'>"+
+		           		      "<label for='inputAddress2'>Address</label>"+
+		           		  	  "<input type='text' class='form-control' id='address' name='address' value='"+home+"' required>"+
+		           		    "</div>"+
+	           			    "<div class='form-group col-md-2'>"+
+	           			      "<label for='inputCity'>City</label>"+
+	           			      "<input type='text' class='form-control' id='City' name='City' value='"+city+"' required>"+
+	           			    "</div>"+
+	           			    "<div class='form-group col-md-2'>"+
+	           			      "<label for='inputZip'>Zip</label>"+
+	           			      "<input type='number' class='form-control' id='Zip' name='Zip' value='"+zip+"' required>"+
+	           			    "</div>"+
+	           			    "<div class='form-group col-md-2'>"+
+	           			      "<label for='inputPhone'>Phone</label>"+
+	           			      "<input type='number' class='form-control' id='phone' name='phone' value='"+phoneNum+"'required>"+
+	           			    "</div>"+
+           			  "</div>"+
+           		  "<button type='submit' class='btn btn-primary'>Update</button>"+
+           		  "</div>"+
+           		"</form><hr>");
             }
-            out.print(
-                    "</table></div>"); %> 
+           	out.print("</div>");
+           	}
+           %> 
                  
-                <%-- Get from StudentServlet Student Grade--%>
+                <%-- Get from StudentServlet Student Schedules--%>
 		   <jsp:useBean id="scheduleID" scope="request" class="com.SchoolRegistrationSystem.StaffServlet"/>  
 			   		<%
 		      		ResultSet StudentSchedule;
 			   		StudentSchedule = scheduleID.studentSchedules();
 		           	
-		        	out.print("<div id='myDIV2'style='display:none;'><h2>All Student Schedules</h2><table>"+"<thead>" +
+		        	out.print("<div id='myDIV2'style='display:none;'><br><h2>All Student Schedules</h2><br><table>"+"<thead>" +
 		                	"<tbody>"+
 		                    "<tr>" +
 		                    "<th> Student ID </th>"+
 		                    "<th> Class Name </th>"+
 		                    "</tr>");
+		        	if(StudentSchedule != null){
 		           	while (StudentSchedule.next())
 		            {
 		           		String studId = StudentSchedule.getString("StudentId");
@@ -285,11 +314,13 @@
 		               		"</tr>");
 		            }
 		           out.print(
-		               		"</table></div>"); 		            
+		               		"</table></div>"); 	
+		        	}
 		           %>               
                                                                                        
 			</div>
 		</div>
 	</div>
+	            
 </body>
 </html>

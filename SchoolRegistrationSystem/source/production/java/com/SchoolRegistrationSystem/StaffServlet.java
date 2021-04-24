@@ -1,6 +1,9 @@
 package com.SchoolRegistrationSystem;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -25,6 +28,7 @@ public class StaffServlet extends HttpServlet {
   	String url = "jdbc:mysql://localhost:3306/schoolregistrationsystem";
   	String dbUsername = "root";
   	String dbPassword = "admin";
+  	String ErrorMessages;
   	boolean successRegistration = false;
   	
   	public void init() {
@@ -54,7 +58,6 @@ public class StaffServlet extends HttpServlet {
 
 	}
 	
-	//New!!!!!!!!!!!!!!!!!!!!!!!!!
 	public ResultSet getRegCount() throws SQLException {
 		ResultSet rs = null;
 	try {
@@ -126,30 +129,6 @@ public class StaffServlet extends HttpServlet {
 	
 	   return rs;
 	}
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	//Student data gets queried and sent to staffDashboard.jsp
-	public ResultSet getStudentData() throws SQLException {
-		ResultSet rs = null;
-	try {
-  			//Connection to db
-  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
-  			//Make a statement
-  			Statement st = con.createStatement();
-  			String query = "Select * from studentdata";
-  		//ResultSet
-  			 rs = st.executeQuery(query);
-    	}	
-  	  		catch (SQLException e) {
-  	  			System.out.println(e.toString());
-  	  		} catch (Exception e) {
-  	  			System.out.println(e.toString());
-  	  		}
-	   return rs;
-	}
-
-
 	 
 	//Determine if there are any registrationuser not promoted in staffDashboard.jsp
 	public int awaitingPromo() throws SQLException 
@@ -233,12 +212,106 @@ public class StaffServlet extends HttpServlet {
 	
 		
 	
+	//NEW Query to get and display all student data
+	public ResultSet uniqueStudentDat() throws SQLException {
+		ResultSet rs = null;
+	try {
+    		
+  			//Connection to db
+  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+  				    		    
+  			//Make a statement
+  			Statement st = con.createStatement();
+  			String query = "SELECT studentdata.StudentId, studentdata.FirstName, studentdata.LastName, studentdata.Birthday, studentdata.Address, studentdata.City, studentdata.Zip, studentdata.phoneNumber, studentdata.Absent from studentdata;";
+  		//ResultSet
+  			 rs = st.executeQuery(query); 
+  			 System.out.print(rs);
+    	}	
+  	  		catch (SQLException e) {
+  	  			System.out.println(e.toString());
+  	  		} catch (Exception e) {
+  	  			System.out.println(e.toString());
+  	  		}
+	   return rs;
+	}
+	
 	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 	
+	//Update Unique student data
+	private boolean updateUniqueStudent(String studentid, String FirstName, String LastName, String bDate, String address, String City,
+			int Zip, int phone) {			
+				try {
+					
+					
+	  			//Connection to db
+	  			Connection con = DriverManager.getConnection(url, dbUsername, dbPassword);
+	  			//Make a statement
+	  			Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+	  			      ResultSet.CONCUR_UPDATABLE);
+	  			String query = "SELECT * FROM studentdata WHERE StudentId='"+studentid+"';";
+	  			//ResultSet
+	  			ResultSet rs = st.executeQuery(query);
+	  			rs.beforeFirst();
+	  			while(rs.next()) {
+	  				String modifiableAddress = rs.getString("Address");
+	  				String modifiableCity = rs.getString("City");
+	  				int modifiableZip = rs.getInt("Zip");
+	  				int modifiablePhone = rs.getInt("PhoneNumber");
+	  				modifiableAddress = address;
+	  				modifiableCity = City;
+	  				modifiableZip = Zip;
+	  				modifiablePhone = phone;
+	  				
+	  				rs.updateString("Address", modifiableAddress);
+	  				rs.updateString("City", modifiableCity);
+	  				rs.updateInt("Zip", modifiableZip);
+	  				rs.updateInt("PhoneNumber", modifiablePhone);
+
+	  				rs.updateRow();
+	  			}
+	  			st.close();
+	  			con.close();
+	  			return true;
+	  		}
+	  		catch (SQLException e) {
+	  			ErrorMessages = e.toString();
+	  			System.out.println(e.toString());
+	  		} catch (Exception e) {
+	  			ErrorMessages = e.toString();
+	  			System.out.println(e.toString());
+	  		}
+			return false;
+
+	  
 	}
+	//changes made by user retrieved
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException,  IOException {
+		String studentid = req.getParameter("StudentID");
+		String firstname = req.getParameter("FirstName");
+		String lastname = req.getParameter("LastName");
+		String bdate = req.getParameter("bDate");
+		String address1 = req.getParameter("address");
+		String city1 = req.getParameter("City");
+		int zip1 =  Integer.parseInt(req.getParameter("Zip"));
+		int phone1 = Integer.parseInt(req.getParameter("phone"));
+		
+		
+		
+		String query = "SELECT StudentId FROM studentdata WHERE StudentId='"+studentid+"';";
+		System.out.println("waiting on this to print out"+studentid);
+		if(updateUniqueStudent(studentid, firstname, lastname, bdate, address1, city1,  zip1, phone1)) 
+		{
+			res.setHeader("Refresh", "0; URL=" + req.getContextPath() + "/staffDashboard.jsp?"); 
+
+		} else {
+			req.setAttribute("message",ErrorMessages);
+			res.setHeader("Refresh", "0; URL=" + req.getContextPath() + "/staffDashboard.jsp?"); 
+		}
+
+	}
+
 
 }

@@ -1,3 +1,4 @@
+//Christopher Evers
 package com.SchoolRegistrationSystem;
 
 import java.io.IOException;
@@ -102,7 +103,7 @@ public class teacherServlet extends HttpServlet {
   				    		    
   			//Make a statement
   			Statement st = con.createStatement();
-  			String query = "select gradeevent.EventId, gradeevent.Homework, gradeevent.Test, gradeevent.Grades, gradejoinstudent.StudentId, classregistration.ClassName, classregistration.ClassId from gradeevent inner join gradejoinstudent on gradeevent.EventId = gradejoinstudent.EventId inner join classregistration on gradejoinstudent.ClassId = classregistration.ClassId;";
+  			String query = "select gradeevent.EventId, gradeevent.Homework, gradeevent.Test, gradeevent.Grades, gradeevent.EventName, gradejoinstudent.StudentId, classregistration.ClassName, classregistration.ClassId, studentdata.FirstName, studentdata.LastName from gradeevent inner join gradejoinstudent on gradeevent.EventId = gradejoinstudent.EventId inner join classregistration on gradejoinstudent.ClassId = classregistration.ClassId inner join studentdata on gradejoinstudent.StudentId = studentdata.StudentId;";
   		//ResultSet
   			 rs = st.executeQuery(query);
     	}	

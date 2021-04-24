@@ -14,7 +14,11 @@ ul {
 }
 
 li {
-	float: left;
+	cursor: pointer;
+	}
+a:hover { 
+	background-color: #90ee90; 
+	transition: 0.1s;
 }
 
 li a {
@@ -26,13 +30,19 @@ li a {
 }
 
 table {
-    table-layout: fixed;
-    width:715px;
-}
-
-td {
-	width: 25%;
-}
+	  border-collapse: collapse;
+	  width: 100%;
+	}
+	
+	td, th {
+	  border: 1px solid #dddddd;
+	  text-align: left;
+	  padding: 8px;
+	}
+	
+	tr:nth-child(even) {
+	  background-color: #dddddd;
+	}
 
 /* Set height of body and the document to 100% to enable "full page tabs" */
 body, html {
