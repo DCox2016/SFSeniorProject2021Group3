@@ -242,7 +242,7 @@
            	String home= allStudentData.getString("Address");
            	String city= allStudentData.getString("City");
            	int zip= allStudentData.getInt("Zip");
-           	int phoneNum= allStudentData.getInt("PhoneNumber");
+           	String phoneNum= allStudentData.getString("PhoneNumber");
            	String Absence= allStudentData.getString("Absent");            
            	out.print("<form id='frm2' action=StaffServlet method='post'>"+
            		  "<div>"+
