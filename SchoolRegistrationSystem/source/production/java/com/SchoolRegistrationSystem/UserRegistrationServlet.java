@@ -121,7 +121,7 @@ public class UserRegistrationServlet extends HttpServlet {
 	  			Statement st = con.createStatement();
 	  			String query = 
 	  					"INSERT INTO schoolregistrationsystem.registrationuser "
-	  					+ "(RegistrationId,Email, Password, FirstName, LastName, age, Address1, Address2, CityStateZip, Phone, UserType, Grade, dependents)"
+	  					+ "(RegistrationId,Email, Password, FirstName, LastName, age, Address1, Address2, CityStateZip, Phone, UserType, Grade, studentId)"
 	  					+ "VALUES('"+id+"','"
 	  								+email+"','"
 	  							    +password+"','"
